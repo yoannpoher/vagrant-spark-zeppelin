@@ -78,6 +78,7 @@ Please add a message between the following lines:
 
 <hr>
 PERSONAL MESSAGE
+Nouveau message personnel
 <hr>
 
 then add and commit the file to your "edit_README" branch.
