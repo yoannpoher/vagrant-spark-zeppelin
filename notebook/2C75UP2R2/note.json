@@ -1087,8 +1087,8 @@
     },
     {
       "title": "Return the sum of squared pair numbers between 1 and 100",
-      "text": "val input \u003d 1 to 100\n\ndef isEven(i: Int): Boolean \u003d i % 2 \u003d\u003d 0\n\nval output \u003d input.filter(isEven).fold(0) {(z, i) \u003d\u003e z*z + i*i}\n\nval expected \u003d 171700",
-      "dateUpdated": "Feb 1, 2017 7:50:37 PM",
+      "text": "val input \u003d 1 to 100\n\ndef isEven(i: Int): Boolean \u003d i % 2 \u003d\u003d 0\n\n//val output \u003d input.filter(isEven).reduce((a, i) \u003d\u003e (a*a) + (i*i))\nval output \u003d input.filter(isEven).map(x \u003d\u003e x*x).reduce(_ + _)\n\nval expected \u003d 171700",
+      "dateUpdated": "Feb 1, 2017 8:23:20 PM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -1113,18 +1113,18 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "\ninput: scala.collection.immutable.Range.Inclusive \u003d Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100)\n\nisEven: (i: Int)Boolean\n\noutput: Int \u003d -1369203936\n\nexpected: Int \u003d 171700\n"
+        "msg": "\ninput: scala.collection.immutable.Range.Inclusive \u003d Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100)\n\nisEven: (i: Int)Boolean\n\noutput: Int \u003d 171700\n\nexpected: Int \u003d 171700\n"
       },
       "dateCreated": "Jan 25, 2017 8:57:27 AM",
-      "dateStarted": "Feb 1, 2017 7:50:37 PM",
-      "dateFinished": "Feb 1, 2017 7:50:38 PM",
+      "dateStarted": "Feb 1, 2017 8:23:20 PM",
+      "dateFinished": "Feb 1, 2017 8:23:21 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Get highest number in a list with a reduce",
-      "text": "import util.Random.nextInt\nval input \u003d Seq.fill(10)(nextInt)\nval output \u003d input.reduce((x, y) \u003d\u003e x)\n\nval expected \u003d input.max",
-      "dateUpdated": "Jan 25, 2017 12:49:26 PM",
+      "text": "import util.Random.nextInt\nval input \u003d Seq.fill(10)(nextInt)\nval output \u003d input.reduce((x, y) \u003d\u003e math.max(x,y))\n\n\nval expected \u003d input.max",
+      "dateUpdated": "Feb 1, 2017 8:24:19 PM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -1151,11 +1151,11 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "\nimport util.Random.nextInt\n\ninput: Seq[Int] \u003d List(1368154480, 932727527, -956762629, -741728139, 1912445161, 1215347429, 1054732247, -811870848, 762475751, 1567410629)\n\noutput: Int \u003d 1368154480\n\nexpected: Int \u003d 1912445161\n"
+        "msg": "\nimport util.Random.nextInt\n\ninput: Seq[Int] \u003d List(-224237541, -886923071, -368859307, 1286218914, -2014650359, 107094139, 1468742501, -2146662837, -1584215071, 1255624554)\n\noutput: Int \u003d 1468742501\n\nexpected: Int \u003d 1468742501\n"
       },
       "dateCreated": "Jan 25, 2017 8:57:32 AM",
-      "dateStarted": "Jan 25, 2017 12:49:26 PM",
-      "dateFinished": "Jan 25, 2017 12:49:29 PM",
+      "dateStarted": "Feb 1, 2017 8:24:19 PM",
+      "dateFinished": "Feb 1, 2017 8:24:20 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
