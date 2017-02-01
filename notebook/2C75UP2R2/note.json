@@ -1301,8 +1301,8 @@
     },
     {
       "title": "Calculate the number of unique words in the \"words\" RDD here.",
-      "text": "val words \u003d sc.parallelize(Array(\"hello\", \"world\", \"goodbye\", \"hello\", \"again\"))\n\nval expected \u003d 4\n\nval output \u003d words.distinct().countByValue()",
-      "dateUpdated": "Feb 1, 2017 8:36:16 PM",
+      "text": "val words \u003d sc.parallelize(Array(\"hello\", \"world\", \"goodbye\", \"hello\", \"again\"))\n\nval expected \u003d 4\n\n//val output \u003d words.distinct().countByValue()\n\nval output \u003d words.distinct().count()",
+      "dateUpdated": "Feb 1, 2017 8:48:52 PM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -1327,11 +1327,11 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "\nwords: org.apache.spark.rdd.RDD[String] \u003d ParallelCollectionRDD[36] at parallelize at \u003cconsole\u003e:30\n\nexpected: Int \u003d 4\n\noutput: scala.collection.Map[String,Long] \u003d Map(hello -\u003e 1, again -\u003e 1, world -\u003e 1, goodbye -\u003e 1)\n"
+        "msg": "\nwords: org.apache.spark.rdd.RDD[String] \u003d ParallelCollectionRDD[52] at parallelize at \u003cconsole\u003e:42\n\nexpected: Int \u003d 4\n\noutput: scala.collection.Map[String,Long] \u003d Map(hello -\u003e 1, again -\u003e 1, world -\u003e 1, goodbye -\u003e 1)\n\noutput: Long \u003d 4\n"
       },
       "dateCreated": "Jan 25, 2017 9:34:16 AM",
-      "dateStarted": "Feb 1, 2017 8:36:16 PM",
-      "dateFinished": "Feb 1, 2017 8:36:16 PM",
+      "dateStarted": "Feb 1, 2017 8:48:26 PM",
+      "dateFinished": "Feb 1, 2017 8:48:27 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
