@@ -710,6 +710,40 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "text": "val splits \u003d dataset.randomSplit(Array(0.7,0.3))\nval training \u003d splits(0).cache()\nval test \u003d splits(1)",
+      "dateUpdated": "Feb 8, 2017 8:38:46 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1486586116046_66044650",
+      "id": "20170208-203516_513154320",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\nsplits: Array[org.apache.spark.sql.Dataset[Adult]] \u003d Array([age: double, workclass: string ... 13 more fields], [age: double, workclass: string ... 13 more fields])\n\ntraining: org.apache.spark.sql.Dataset[Adult] \u003d [age: double, workclass: string ... 13 more fields]\n\ntest: org.apache.spark.sql.Dataset[Adult] \u003d [age: double, workclass: string ... 13 more fields]\n"
+      },
+      "dateCreated": "Feb 8, 2017 8:35:16 PM",
+      "dateStarted": "Feb 8, 2017 8:38:46 PM",
+      "dateFinished": "Feb 8, 2017 8:38:47 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "text": "%md \n\n## V. Creation of models\n\nWe are now ready to try out some of the Binary Classification Algorithms available in the new ML Pipelines API.\n\nWe have the choice between:\n- [Binomial Logistic regression](http://spark.apache.org/docs/latest/ml-classification-regression.html#binomial-logistic-regression)\n- [Decision trees](http://spark.apache.org/docs/latest/ml-classification-regression.html#decision-trees)\n- [Random forest](http://spark.apache.org/docs/latest/ml-classification-regression.html#random-forests)\n\nThese are the general steps we will take to build our models:\n- Create the initial model on the training set\n- Use your model to make predictions on your testing set\n- Evaluate the quality of your predictions\n\nWe will be using the `BinaryClassificationEvaluator` to evaluate our models. The default metric used here is [areaUnderROC](https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve).\n\n\u003ch4 style\u003d\"color:red;\"\u003eExercise\u003c/h4\u003e\n\n1. Fit your data on one of the three Machine Learning models on the training dataset. This should create an Estimator.\n2. Run the estimator on the testing dataset to create a prediction column\n3. Use `BinaryClassificationEvaluator.evaluate()` to evaluate your predictions.",
       "dateUpdated": "Feb 7, 2017 12:55:44 PM",
       "config": {
@@ -741,6 +775,40 @@
       "dateCreated": "Feb 3, 2017 9:31:43 AM",
       "dateStarted": "Feb 7, 2017 12:55:44 PM",
       "dateFinished": "Feb 7, 2017 12:55:44 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//val training \u003d spark.read.format(\"libsvm\").load(\"data/mllib/sample_libsvm_data.txt\")\n\nval categoricalCols \u003d Seq(\"workclass\", \"education\", \"marital_status\", \"occupation\", \"relationship\", \"race\", \"sex\", \"native_country\")\nval numericCols \u003d Seq(\"age\", \"fnlwgt\", \"education_num\", \"capital_gain\", \"capital_loss\", \"hours_per_week\")\n\nimport org.apache.spark.ml.feature.{OneHotEncoder, StringIndexer, VectorAssembler}\nimport org.apache.spark.ml.{Pipeline, PipelineModel}\n\nval stages \u003d categoricalCols.flatMap{w \u003d\u003e\n    val stringIndexer \u003d new StringIndexer()\n        .setInputCol(w)\n        .setOutputCol(w+\"Index\")\n    val oneHotEncoder \u003d new OneHotEncoder()\n        .setInputCol(stringIndexer.getOutputCol)\n        .setOutputCol(stringIndexer.getInputCol + \"ClassVec\")\n    Seq(stringIndexer, oneHotEncoder)// ++ Seq(label_stringIdx)\n}\n\nval label_stringIdx \u003d new StringIndexer()\n    .setInputCol(\"income\")\n    .setOutputCol(\"label\")\nval assemblerStage \u003d new VectorAssembler()\n    .setInputCols(categoricalCols.map(w \u003d\u003e w +\"ClassVec\").toArray)\n    .setOutputCol(\"features\")\n\nval  finalStages \u003d Seq(label_stringIdx) ++ stages ++ Seq(assemblerStage)\n\nval pipeline \u003d new Pipeline()\n  .setStages(finalStages.toArray)\nval dataset_new \u003d pipeline.fit(dataset).transform(dataset)\n//dataset_new.show()\n\n// Load training data\n\nval splits \u003d dataset_new.randomSplit(Array(0.7,0.3))\nval training \u003d splits(0).cache()\nval test \u003d splits(1)\n\nimport org.apache.spark.ml.classification.LogisticRegression\n\nval lr \u003d new LogisticRegression()\n  .setMaxIter(10)\n  .setRegParam(0.3)\n  .setElasticNetParam(0.8)\n\n// Fit the model\nval lrModel \u003d lr.fit(training)\n\n// Print the coefficients and intercept for logistic regression\nprintln(s\"Coefficients: ${lrModel.coefficients} Intercept: ${lrModel.intercept}\")\n\n// We can also use the multinomial family for binary classification\nval mlr \u003d new LogisticRegression()\n    .setMaxIter(10)\n    .setRegParam(0.3)\n    .setElasticNetParam(0.8)\n    //.setFamily(\"multinomial\")\n\nval mlrModel \u003d mlr.fit(training)\n\n// Print the coefficients and intercepts for logistic regression with multinomial family\n//println(s\"Multinomial coefficients: ${mlrModel.coefficientMatrix}\")\n//println(s\"Multinomial intercepts: ${mlrModel.interceptVector}\")",
+      "dateUpdated": "Feb 8, 2017 8:51:27 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1486586396831_-1175562476",
+      "id": "20170208-203956_2005044797",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "\ncategoricalCols: Seq[String] \u003d List(workclass, education, marital_status, occupation, relationship, race, sex, native_country)\n\nnumericCols: Seq[String] \u003d List(age, fnlwgt, education_num, capital_gain, capital_loss, hours_per_week)\n\nimport org.apache.spark.ml.feature.{OneHotEncoder, StringIndexer, VectorAssembler}\n\nimport org.apache.spark.ml.{Pipeline, PipelineModel}\nstages: Seq[org.apache.spark.ml.PipelineStage with org.apache.spark.ml.param.shared.HasOutputCol with org.apache.spark.ml.param.shared.HasInputCol with org.apache.spark.ml.util.DefaultParamsWritable{def copy(extra: org.apache.spark.ml.param.ParamMap): org.apache.spark.ml.PipelineStage with org.apache.spark.ml.param.shared.HasOutputCol with org.apache.spark.ml.param.shared.HasInputCol with org.apache.spark.ml.util.DefaultParamsWritable{def copy(extra: org.apache.spark.ml.param.ParamMap): org.apache.spark.ml.PipelineStage with org.apache.spark.ml.param.shared.HasOutputCol with org.apache.spark.ml.param.shared.HasInputCol with org.apache.spark.ml.util.DefaultParamsWritable}}] \u003d List(strIdx_3bda4b7a74a8, oneHot_4ac136b6c219, strIdx_cdd9887c4dee, oneHot_994248bf7f79, strIdx_1b29b41b621d, one...\nlabel_stringIdx: org.apache.spark.ml.feature.StringIndexer \u003d strIdx_951bdd97a02b\n\nassemblerStage: org.apache.spark.ml.feature.VectorAssembler \u003d vecAssembler_f606ba85014f\nfinalStages: Seq[org.apache.spark.ml.PipelineStage with org.apache.spark.ml.param.shared.HasOutputCol with org.apache.spark.ml.util.DefaultParamsWritable{def copy(extra: org.apache.spark.ml.param.ParamMap): org.apache.spark.ml.PipelineStage with org.apache.spark.ml.param.shared.HasOutputCol with org.apache.spark.ml.util.DefaultParamsWritable{def copy(extra: org.apache.spark.ml.param.ParamMap): org.apache.spark.ml.PipelineStage with org.apache.spark.ml.param.shared.HasOutputCol with org.apache.spark.ml.util.DefaultParamsWritable}}] \u003d List(strIdx_951bdd97a02b, strIdx_3bda4b7a74a8, oneHot_4ac136b6c219, strIdx_cdd9887c4dee, oneHot_994248bf7f79, strIdx_1b29b41b621d, oneHot_a1e7ac146c3a, strIdx_67d2391536c4, oneHot_2c08d612e385, strIdx_11e55aed04e0, oneHot_20af3e99894b, strIdx_91bb8e9dbcb0, o...\npipeline: org.apache.spark.ml.Pipeline \u003d pipeline_3858bb8b7099\n\ndataset_new: org.apache.spark.sql.DataFrame \u003d [age: double, workclass: string ... 31 more fields]\n\nsplits: Array[org.apache.spark.sql.Dataset[org.apache.spark.sql.Row]] \u003d Array([age: double, workclass: string ... 31 more fields], [age: double, workclass: string ... 31 more fields])\n\ntraining: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [age: double, workclass: string ... 31 more fields]\n\ntest: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [age: double, workclass: string ... 31 more fields]\n\nimport org.apache.spark.ml.classification.LogisticRegression\n\nlr: org.apache.spark.ml.classification.LogisticRegression \u003d logreg_0e891c1af6b0\n\nlrModel: org.apache.spark.ml.classification.LogisticRegressionModel \u003d logreg_0e891c1af6b0\nCoefficients: (94,[],[]) Intercept: -1.1569861861519142\n\nmlr: org.apache.spark.ml.classification.LogisticRegression \u003d logreg_c0609f382a7f\n\nmlrModel: org.apache.spark.ml.classification.LogisticRegressionModel \u003d logreg_c0609f382a7f\n"
+      },
+      "dateCreated": "Feb 8, 2017 8:39:56 PM",
+      "dateStarted": "Feb 8, 2017 8:51:27 PM",
+      "dateFinished": "Feb 8, 2017 8:51:36 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
